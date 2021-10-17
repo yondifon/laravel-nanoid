@@ -1,0 +1,12 @@
+/build
+/coverage
+/vendor
+/.idea
+/.vscode
+.DS_Store
+.phpunit.result.cache
+.php_cs.cache
+_lighthouse_ide_helper.php
+composer.lock
+phpunit.xml
+testbench.yaml

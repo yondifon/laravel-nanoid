@@ -1,0 +1,47 @@
+{
+	"name": "malico/laravel-nanoid",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Malico",
+			"email": "hi@malico.me"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Malico\\LaravelNanoid\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Tests\\": "tests/"
+		}
+	},
+	"require": {
+		"hidehalo/nanoid-php": "^1.1"
+	},
+	"require-dev": {
+		"ext-pdo": "*",
+		"pestphp/pest": "^1.20",
+		"friendsofphp/php-cs-fixer": "^3.1",
+		"orchestra/testbench": "^6.21"
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"Malico\\LaravelNanoid\\LaravelNanoidServiceProvider"
+			]
+		}
+	},
+	"archive": {
+		"exclude": [
+			"tests/",
+			"*.xml"
+		]
+	},
+	"scripts": {
+		"post-autoload-dump": [
+			"@php ./vendor/bin/testbench package:discover --ansi"
+		]
+	}
+}
