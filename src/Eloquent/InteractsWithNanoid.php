@@ -7,20 +7,6 @@ use Hidehalo\Nanoid\Client;
 trait InteractsWithNanoid
 {
     /**
-     * Nano id length.
-     *
-     * @var array|int
-     */
-    protected $nanoidLength;
-
-    /**
-     * Nano id prefix.
-     *
-     * @var string
-     */
-    protected $nanoidPrefix = '';
-
-    /**
      * Get the nanoid length.
      */
     protected function getNanoidLength(): ?int

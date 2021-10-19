@@ -17,6 +17,20 @@ class User extends AuthUser
     public $incrementing = false;
 
     /**
+     * Nano id length.
+     *
+     * @var array|int
+     */
+    protected $nanoidLength;
+
+    /**
+     * Nano id prefix.
+     *
+     * @var string
+     */
+    protected $nanoidPrefix = '';
+
+    /**
      * The "type" of the auto-incrementing ID.
      *
      * @var string
