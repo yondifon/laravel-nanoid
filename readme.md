@@ -132,6 +132,16 @@ To create a new migration, use the artisan command `make:nanoid-migration`. All 
 
 This is inspired by the [Laravel Eloquent UUID](https://github.com/goldspecdigital/laravel-eloquent-uuid) package and stripe's transaction ids.
 
+If you want to customize the user model, Replace the follows namespace in your user model.
+
+```php
+
+// use Illuminate\Foundation\Auth\User as Authenticatable;
+use Malico\LaravelNanoid\Auth\User as Authenticatable;
+
+#class User extends Authenticatable
+```
+
 ### Author
 
 Ndifon Desmond Yong
