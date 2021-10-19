@@ -1,10 +1,11 @@
 <?php
 
-namespace Malico\LaravelNanoid\Eloquent;
+namespace Malico\LaravelNanoid\Auth;
 
-use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Foundation\Auth\User as AuthUser;
+use Malico\LaravelNanoid\Eloquent\InteractsWithNanoid;
 
-abstract class Model extends EloquentModel
+class User extends AuthUser
 {
     use InteractsWithNanoid;
 

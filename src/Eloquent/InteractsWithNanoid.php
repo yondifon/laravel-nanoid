@@ -4,7 +4,7 @@ namespace Malico\LaravelNanoid\Eloquent;
 
 use Hidehalo\Nanoid\Client;
 
-trait NanoidTrait
+trait InteractsWithNanoid
 {
     /**
      * Nano id length.

@@ -1,9 +1,15 @@
 <?php
 
 use Illuminate\Support\Str;
+use Malico\LaravelNanoid\Auth\User;
 use Malico\LaravelNanoid\Eloquent\Model;
 
 abstract class ModelTest extends Model
+{
+    protected $table = 'test_migrations_with_string_id';
+}
+
+class UserModel extends User
 {
     protected $table = 'test_migrations_with_string_id';
 }
@@ -38,4 +44,10 @@ test('creates nanoid with length before saving', function () {
     $model = BasicModelWithLength::create();
 
     expect(Str::length($model->getKey()))->toBe(3);
+});
+
+test('user model creates with appropriate id', function () {
+    $model = UserModel::create();
+
+    expect($model->getKey())->toBeString();
 });

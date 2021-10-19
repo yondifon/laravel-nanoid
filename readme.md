@@ -46,11 +46,11 @@ With the `ModelTrait` trait, all you need to do is add the trait to your model c
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-namespace Malico\LaravelNanoid\Eloquent\NanoidTrait;
+namespace Malico\LaravelNanoid\Eloquent\InteractsWithNanoid;
 
 class Book extends Model{
     use HasFactory;
-    use NanoidTrait;
+    use InteractsWithNanoid;
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -111,9 +111,6 @@ To create a new migration, use the artisan command `make:nanoid-migration`. All 
 
 ```php
 <?php
-
-
-
 
     /**
      * Nano id length.
