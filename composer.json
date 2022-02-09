@@ -19,14 +19,14 @@
 	},
 	"require": {
 		"hidehalo/nanoid-php": "^1.1",
-		"illuminate/auth": "^8.0",
-		"illuminate/support": "^8.0"
+		"illuminate/auth": "^8.0|^9.0",
+		"illuminate/support": "^8.0|^9.0"
 	},
 	"require-dev": {
 		"ext-pdo": "*",
 		"pestphp/pest": "^1.20",
 		"friendsofphp/php-cs-fixer": "^3.1",
-		"orchestra/testbench": "^6.21"
+		"orchestra/testbench": "^7.0"
 	},
 	"extra": {
 		"laravel": {
@@ -45,5 +45,10 @@
 		"post-autoload-dump": [
 			"@php ./vendor/bin/testbench package:discover --ansi"
 		]
+	},
+	"config": {
+		"allow-plugins": {
+			"pestphp/pest-plugin": true
+		}
 	}
 }
