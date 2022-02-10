@@ -7,6 +7,31 @@ use Hidehalo\Nanoid\Client;
 trait InteractsWithNanoid
 {
     /**
+     * @return string
+     */
+    public function getKeyType(): string
+    {
+        return 'string';
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIncrementing(): bool
+    {
+        return false;
+    }
+
+    protected static function booted()
+    {
+        parent::booted();
+
+        static::creating(function (self $model): void {
+            $model->{$model->getKeyName()} = $model->generateNanoid();
+        });
+    }
+    
+    /**
      * Get the nanoid length.
      */
     protected function getNanoidLength(): ?int
