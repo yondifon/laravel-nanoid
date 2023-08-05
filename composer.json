@@ -19,8 +19,8 @@
 	},
 	"require": {
 		"hidehalo/nanoid-php": "^1.1",
-		"illuminate/auth": "^8.0|^9.0",
-		"illuminate/support": "^8.0|^9.0"
+		"illuminate/auth": "^8.0|^9.0|^10.0",
+		"illuminate/support": "^8.0|^9.0|^10.0"
 	},
 	"require-dev": {
 		"ext-pdo": "*",
