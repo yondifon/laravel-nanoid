@@ -25,8 +25,8 @@
 	"require-dev": {
 		"ext-pdo": "*",
 		"pestphp/pest": "^1.20",
-		"friendsofphp/php-cs-fixer": "^3.1",
-		"orchestra/testbench": "^7.0"
+		"orchestra/testbench": "^7.0",
+		"laravel/pint": "^1.10"
 	},
 	"extra": {
 		"laravel": {

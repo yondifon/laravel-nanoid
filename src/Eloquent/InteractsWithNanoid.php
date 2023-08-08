@@ -25,6 +25,6 @@ trait InteractsWithNanoid
     {
         $client = new Client();
 
-        return $this->nanoidPrefix . $client->generateId($this->getNanoidLength(), Client::MODE_DYNAMIC);
+        return $this->nanoidPrefix.$client->generateId($this->getNanoidLength(), Client::MODE_DYNAMIC);
     }
 }

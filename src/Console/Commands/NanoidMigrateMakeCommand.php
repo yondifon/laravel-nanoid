@@ -23,8 +23,7 @@ class NanoidMigrateMakeCommand extends MigrateMakeCommand
     /**
      * Create a new migration install command instance.
      *
-     * @param \Illuminate\Database\Migrations\MigrationCreator $creator
-     *
+     * @param  \Illuminate\Database\Migrations\MigrationCreator  $creator
      * @return void
      */
     public function __construct(MigrationCreator $creator, Composer $composer)
