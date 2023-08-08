@@ -15,9 +15,12 @@ beforeEach(function () {
 test('it generates a model', function () {
     $this->artisan(NanoidModelMakeCommand::class, ['name' => 'TestModel'])->assertExitCode(0);
 
-    $this->assertFileExists(app_path('Models/TestModel.php'));
-    $this->assertStringContainsString('use Malico\LaravelNanoid\Eloquent\Model;', file_get_contents(app_path('Models/TestModel.php')));
-    $this->assertStringContainsString('extends Model', file_get_contents(app_path('Models/TestModel.php')));
+    $modelContent = file_get_contents(app_path('Models/TestModel.php'));
+
+    $this->assertStringContainsString('use Malico\LaravelNanoid\HasNanoids', $modelContent);
+    $this->assertStringContainsString('extends Model', $modelContent);
+    $this->assertStringContainsString('use HasNanoids;', $modelContent);
+
 });
 
 test('it generates a migration if specified', function () {

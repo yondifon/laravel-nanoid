@@ -33,27 +33,13 @@ class NanoidModelMakeCommand extends ModelMakeCommand
      */
     protected function getStub(): string
     {
-        return realpath(__DIR__.'/../../Eloquent/stubs/nanoid.model.stub');
-    }
-
-    /**
-     * Get the console command options.
-     */
-    protected function getOptions(): array
-    {
-        // Remove the pivot option from the parent class.
-        return array_filter(
-            parent::getOptions(),
-            fn (array $option): bool => $option[0] !== 'pivot'
-        );
+        return realpath(__DIR__.'/stubs/nanoid.model.stub');
     }
 
     /**
      * Create a migration file for the model.
-     *
-     * @return void
      */
-    protected function createMigration()
+    protected function createMigration(): void
     {
         $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
 
@@ -61,20 +47,5 @@ class NanoidModelMakeCommand extends ModelMakeCommand
             'name' => "create_{$table}_table",
             '--create' => $table,
         ]);
-    }
-
-    /**
-     * Get the value of a command option.
-     *
-     * @param  null|string  $key
-     * @return null|array|bool|string
-     */
-    public function option($key = null)
-    {
-        if ($key === 'pivot') {
-            return false;
-        }
-
-        return parent::option($key);
     }
 }

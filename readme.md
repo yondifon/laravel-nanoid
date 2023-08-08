@@ -10,92 +10,31 @@ A simple drop-in solution for providing nanoid support for the IDs of your Eloqu
 
 ## Usage
 
-There are two ways to use this package:
+Use nanoid within your model, use the trait `HasNanoids` within your model like.
 
-- By extending the provided model classes (preferred and simplest method).
-- By using the provided model trait (allows for extending another model class).
-
-### Extend the model classes
-
-While creating your model, you can extend the `Eloquent Model` class provided by the package.
-
-```php
+```diff
 <?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Malico\LaravelNanoid\Eloquent\Model;
-
-class Book extends Model
-{
-    use HasFactory;
-}
-```
-
-To create model fast and easy, use the artisan command `make:nanoid-model`, same as you will do with the `make:model` command.
-All arguments work the same as the `make:model` command. To create migration file with string id (which is what is needed), add the `-m` option, the migration file created will have id of string type (string) instead of autoincrementing integer type.
-
-### Extend the model trait
-
-With the `ModelTrait` trait, all you need to do is add the trait to your model class, then make you sure model properties look like this:
-
-```php
-<?php
-
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-namespace Malico\LaravelNanoid\Eloquent\InteractsWithNanoid;
++ use Malico\LaravelNanoid\HasNanoids;
 
 class Book extends Model{
     use HasFactory;
-    use InteractsWithNanoid;
-
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
-     * The "type" of the auto-incrementing ID.
-     *
-     * @var string
-     */
-    protected $keyType = 'string';
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * The "booting" method of the model.
-     */
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::creating(function (self $model): void {
-            $model->{$model->getKeyName()} = $model->generateNanoid();
-        });
-    }
++   use HasNanoids;
 }
 ```
 
-Take note of the `$incrementing` and `$keyType` properties. Also make sure within your `boot` method you call the `parent::boot` method and then add the `creating` event listener.
-Also make sure your id column is set to `string` type.
+Your migration file should like.
 
-```php
+```diff
 // migration file
 public function up()
 {
     Schema::create('test_models', function (Blueprint $table) {
-        $table->string('id')->primary();
+-       $table->id();
++       $table->string('id')->primary();
         //
         $table->timestamps();
     });
@@ -113,34 +52,31 @@ To create a new migration, use the artisan command `make:nanoid-migration`. All 
 <?php
 
     /**
-     * Nano id length.
-     *
      * @var array|int
      */
     protected $nanoidLength = 10;
     // id will be of length 10
     // specifying to array. e.g [10, 20] will generate id of length 10 to 20
 
+    public function nanoidLength(): array|int
+    {
+        // [10,20]
+        return 10;
+    }
+
     /**
-     * Nano id prefix.
-     *
      * @var string
      */
     protected $nanoidPrefix = 'pl_'; // id will look: pl_2k1MzOO2shfwow ...
 
+    public function nanoidPrefix(): string
+    {
+        return 'pay_'; // pay_2MII83829sl2d
+    }
+
 ```
 
-This is inspired by the [Laravel Eloquent UUID](https://github.com/goldspecdigital/laravel-eloquent-uuid) package and stripe's transaction ids.
-
-If you want to customize the user model, Replace the follows namespace in your user model.
-
-```php
-
-// use Illuminate\Foundation\Auth\User as Authenticatable;
-use Malico\LaravelNanoid\Auth\User as Authenticatable;
-
-#class User extends Authenticatable
-```
+Check the upgrade guide if you're [upgrading](UPGRADE.MD) from 0.x
 
 ### Author
 
