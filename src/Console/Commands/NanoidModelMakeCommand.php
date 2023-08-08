@@ -33,7 +33,7 @@ class NanoidModelMakeCommand extends ModelMakeCommand
      */
     protected function getStub(): string
     {
-        return realpath(__DIR__ . '/../../Eloquent/stubs/nanoid.model.stub');
+        return realpath(__DIR__.'/../../Eloquent/stubs/nanoid.model.stub');
     }
 
     /**
@@ -58,7 +58,7 @@ class NanoidModelMakeCommand extends ModelMakeCommand
         $table = Str::snake(Str::pluralStudly(class_basename($this->argument('name'))));
 
         $this->call(NanoidMigrateMakeCommand::class, [
-            'name'     => "create_{$table}_table",
+            'name' => "create_{$table}_table",
             '--create' => $table,
         ]);
     }
@@ -66,8 +66,7 @@ class NanoidModelMakeCommand extends ModelMakeCommand
     /**
      * Get the value of a command option.
      *
-     * @param null|string $key
-     *
+     * @param  null|string  $key
      * @return null|array|bool|string
      */
     public function option($key = null)
