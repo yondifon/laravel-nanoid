@@ -18,10 +18,11 @@ class Payment extends Model {
 }
 ```
 
-Also, we added, `nanoidPrefix` and `nanoidLength`, like
+Also, we support 2 methods, `nanoidPrefix` and `nanoidLength`, like
 
 ```php
-public function nanoidLength(): int {
+public function nanoidLength(): int|array {
+    // return [10,15]
     return 2;
 }
 
