@@ -56,6 +56,19 @@ it('creates nanoid with length method before saving', function () {
     expect(Str::length($model->getKey()))->toBe(3);
 });
 
+it('creates nanoid with alphabet before saving', function () {
+    $model = BasicModelWithAlphabet::create();
+
+    expect((int) $model->getKey())->toBeInt();
+});
+
+it('creates nanoid with alphabet and length before saving', function () {
+    $model = BasicModelWithAlphabetAndLength::create();
+
+    expect((int) $model->getKey())->toBeInt();
+    expect(Str::length($model->getKey()))->toBe(3);
+});
+
 abstract class ModelTest extends Model
 {
     use HasNanoids;
@@ -110,4 +123,16 @@ class BasicModelWithLengthMethod extends ModelTest
     {
         return 3;
     }
+}
+
+class BasicModelWithAlphabet extends ModelTest
+{
+    protected $nanoidAlphabet = '1234567890';
+}
+
+class BasicModelWithAlphabetAndLength extends ModelTest
+{
+    protected $nanoidAlphabet = '1234567890';
+
+    protected $nanoidLength = 3;
 }

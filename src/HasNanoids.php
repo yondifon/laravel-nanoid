@@ -23,7 +23,13 @@ trait HasNanoids
 
     protected function newNanoId(): string
     {
-        return (new Client())->generateId($this->getNanoidLength(), Client::MODE_DYNAMIC);
+        $client = new Client;
+
+        if ($alphabet = $this->getNanoIdAlphabet()) {
+            return $client->formattedId($alphabet, $this->getNanoidLength());
+        }
+
+        return $client->generateId($this->getNanoidLength(), Client::MODE_DYNAMIC);
     }
 
     protected function getNanoIdPrefix(): string
@@ -59,6 +65,19 @@ trait HasNanoids
         }
 
         return $nanoIdLength;
+    }
+
+    protected function getNanoIdAlphabet(): ?string
+    {
+        if (property_exists($this, 'nanoidAlphabet')) {
+            return $this->nanoidAlphabet;
+        }
+
+        if (method_exists($this, 'nanoidAlphabet')) {
+            return $this->nanoidAlphabet();
+        }
+
+        return null;
     }
 
     /**

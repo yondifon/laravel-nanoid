@@ -51,28 +51,32 @@ To create a new migration, use the artisan command `make:nanoid-migration`. All 
 ```php
 <?php
 
-    /**
-     * @var array|int
-     */
+    /** @var array|int */
     protected $nanoidLength = 10;
     // id will be of length 10
     // specifying to array. e.g [10, 20] will generate id of length 10 to 20
-
+    // or
     public function nanoidLength(): array|int
     {
         // [10,20]
         return 10;
     }
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $nanoidPrefix = 'pl_'; // id will look: pl_2k1MzOO2shfwow ...
-
+    // or
     public function nanoidPrefix(): string
     {
         return 'pay_'; // pay_2MII83829sl2d
     }
+
+    /** @var string */
+    protected nanoidAlphabet = 'ABC';
+    // or
+    public function nanoidAlphabet(): stirng {
+        return 'ABC'; // pay_ACBACB
+    }
+
 
 ```
 
