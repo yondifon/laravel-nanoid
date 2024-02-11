@@ -69,11 +69,49 @@ it('creates nanoid with alphabet and length before saving', function () {
     expect(Str::length($model->getKey()))->toBe(3);
 });
 
+it('creates nanoid with multiple ids before saving', function () {
+    $model = BasicModelWithMultipleIds::create();
+
+    expect($model->getKey())->toBeString();
+    expect($model->another_id)->toBeString();
+});
+
+it('creates multiple nanoids that are unique', function () {
+    $model = BasicModelWithMultipleIds::create();
+
+    expect($model->getKey())->toBeString();
+    expect($model->another_id)->toBeString();
+
+    expect($model->getKey())->not->toBe($model->another_id);
+});
+
+it("doesn't override existing id", function () {
+    $model = BasicModelWithFillable::create(['another_id' => '123']);
+
+    expect($model->another_id)->toBe('123');
+});
+
+it('creates nanoid for columns in models with auto-incrementing id', function () {
+    $model = BasicModelWithDifferentNanoIdColumn::create();
+
+    expect($model->nano_id)->toBeString();
+});
+
 abstract class ModelTest extends Model
 {
     use HasNanoids;
 
     protected $table = 'test_migrations_with_string_id';
+}
+
+class BasicModelWithDifferentNanoIdColumn extends ModelTest
+{
+    protected $table = 'test_migration_with_integer_id';
+
+    public function uniqueIds(): array
+    {
+        return ['nano_id'];
+    }
 }
 
 class BasicModel extends ModelTest
@@ -135,4 +173,22 @@ class BasicModelWithAlphabetAndLength extends ModelTest
     protected $nanoidAlphabet = '1234567890';
 
     protected $nanoidLength = 3;
+}
+
+class BasicModelWithMultipleIds extends ModelTest
+{
+    public function uniqueIds(): array
+    {
+        return ['id', 'another_id'];
+    }
+}
+
+class BasicModelWithFillable extends ModelTest
+{
+    protected $fillable = ['another_id'];
+
+    public function uniqueIds(): array
+    {
+        return ['id', 'another_id'];
+    }
 }
