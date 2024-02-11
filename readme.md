@@ -51,6 +51,8 @@ To create a new migration, use the artisan command `make:nanoid-migration`. All 
 ```php
 <?php
 
+class YourModel Extends \Illuminate\Database\Eloquent\Model
+{
     /** @var array|int */
     protected $nanoidLength = 10;
     // id will be of length 10
@@ -77,7 +79,13 @@ To create a new migration, use the artisan command `make:nanoid-migration`. All 
         return 'ABC'; // pay_ACBACB
     }
 
-
+    public function uniqueIds()
+    {
+        // will create nanonids for 'unique_id' &'another_with'
+        // Also, won't break if id is not listed.
+        return ['unique_id', 'another_id'];
+    }
+}
 ```
 
 Check the upgrade guide if you're [upgrading](UPGRADE.MD) from 0.x
