@@ -5,6 +5,7 @@
 /.vscode
 .DS_Store
 .phpunit.result.cache
+.phpunit.cache
 .php_cs.cache
 _lighthouse_ide_helper.php
 composer.lock

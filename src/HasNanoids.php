@@ -9,8 +9,22 @@ trait HasNanoids
     protected static function bootHasNanoids(): void
     {
         static::creating(function (self $model) {
-            $model->{$model->getKeyName()} = $model->generateNanoid();
+            foreach ($model->uniqueIds() as $column) {
+                if (! $model->getAttribute($column)) {
+                    $model->setAttribute($column, $model->generateNanoid());
+                }
+            }
         });
+    }
+
+    /**
+     * Get the columns that should receive a unique identifier.
+     *
+     * @return array
+     */
+    public function uniqueIds()
+    {
+        return [$this->getKeyName()];
     }
 
     /**
@@ -87,7 +101,11 @@ trait HasNanoids
      */
     public function getKeyType()
     {
-        return 'string';
+        if (in_array($this->getKeyName(), $this->uniqueIds())) {
+            return 'string';
+        }
+
+        return $this->keyType;
     }
 
     /**
@@ -97,6 +115,10 @@ trait HasNanoids
      */
     public function getIncrementing()
     {
-        return false;
+        if (in_array($this->getKeyName(), $this->uniqueIds())) {
+            return false;
+        }
+
+        return $this->incrementing;
     }
 }
