@@ -3,28 +3,26 @@
 namespace Malico\LaravelNanoid;
 
 use Hidehalo\Nanoid\Client;
+use Illuminate\Database\Eloquent\Concerns\HasUniqueStringIds;
 
 trait HasNanoids
 {
-    protected static function bootHasNanoids(): void
+    use HasUniqueStringIds;
+
+    /**
+     * @return string
+     */
+    public function newUniqueId()
     {
-        static::creating(function (self $model) {
-            foreach ($model->uniqueIds() as $column) {
-                if (! $model->getAttribute($column)) {
-                    $model->setAttribute($column, $model->generateNanoid());
-                }
-            }
-        });
+        return $this->generateNanoid();
     }
 
     /**
-     * Get the columns that should receive a unique identifier.
-     *
-     * @return array
+     * @param  mixed  $value
      */
-    public function uniqueIds()
+    protected function isValidUniqueId($value): bool
     {
-        return [$this->getKeyName()];
+        return true;
     }
 
     /**
@@ -92,33 +90,5 @@ trait HasNanoids
         }
 
         return null;
-    }
-
-    /**
-     * Get the auto-incrementing key type.
-     *
-     * @return string
-     */
-    public function getKeyType()
-    {
-        if (in_array($this->getKeyName(), $this->uniqueIds())) {
-            return 'string';
-        }
-
-        return $this->keyType;
-    }
-
-    /**
-     * Get the value indicating whether the IDs are incrementing.
-     *
-     * @return bool
-     */
-    public function getIncrementing()
-    {
-        if (in_array($this->getKeyName(), $this->uniqueIds())) {
-            return false;
-        }
-
-        return $this->incrementing;
     }
 }
