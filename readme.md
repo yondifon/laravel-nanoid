@@ -62,7 +62,59 @@ Each option supports either:
 - A single value for all unique ID columns
 - A keyed array per column
 
-### Example
+### `nanoidPrefix`
+
+```php
+// One prefix for all generated ids
+protected $nanoidPrefix = 'p-';
+
+// Per-column prefixes
+protected $nanoidPrefix = ['id' => 'p-', 'username' => 'u_'];
+```
+
+### `nanoidLength`
+
+```php
+// One fixed length for all generated ids
+protected $nanoidLength = 12;
+
+// Random length between min and max for all generated ids
+protected $nanoidLength = [2, 5];
+
+// Per-column fixed length
+protected $nanoidLength = ['id' => 7, 'username' => 12];
+
+// Per-column ranged length (min, max)
+protected $nanoidLength = ['id' => [2, 5], 'username' => [8, 10]];
+
+// Invalid: range must have exactly two values [min, max]
+protected $nanoidLength = ['id' => [2]];
+```
+
+### `nanoidAlphabet`
+
+```php
+// One alphabet for all generated ids
+protected $nanoidAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+// Per-column alphabets
+protected $nanoidAlphabet = [
+    'id' => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
+    'username' => 'abcdefghijklmnopqrstuvwxyz',
+];
+```
+
+### `nanoidFormat`
+
+```php
+// One format for all unique id columns
+protected $nanoidFormat = 'u_{4}-{4}';
+
+// Per-column formats
+protected $nanoidFormat = ['id' => 'p-{7}', 'username' => 'u_{4}-{4}'];
+```
+
+### Full model example
 
 ```php
 <?php
@@ -75,15 +127,10 @@ class SessionToken extends Model
     use HasNanoids;
 
     protected $nanoidAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-
     protected $nanoidPrefix = [
         'id' => 'p-',
     ];
-
-    protected $nanoidLength = [
-        'id' => 12,
-    ];
-
+    protected $nanoidLength = 12;
     protected $nanoidFormat = [
         'username' => 'u_{8}',
     ];
