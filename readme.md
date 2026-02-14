@@ -1,95 +1,171 @@
 # Laravel Nanoid
 
-## Introduction
+Generate Nanoid-based, Stripe-style IDs for your Eloquent models.
 
-A simple drop-in solution for providing nanoid support for the IDs of your Eloquent models. (Stripe-like IDs)
+## Installation
 
-## Installing
+```bash
+composer require malico/laravel-nanoid
+```
 
-`composer require malico/laravel-nanoid`
+## Quick Start
 
-## Usage
+Add `HasNanoids` to your model:
 
-Use nanoid within your model, use the trait `HasNanoids` within your model like.
-
-```diff
+```php
 <?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-+ use Malico\LaravelNanoid\HasNanoids;
+use Illuminate\Database\Eloquent\Model;
+use Malico\LaravelNanoid\HasNanoids;
 
-class Book extends Model{
+class Book extends Model
+{
     use HasFactory;
-+   use HasNanoids;
+    use HasNanoids;
 }
 ```
 
-Your migration file should like.
+Use a string primary key in your migration:
 
-```diff
-// migration file
-public function up()
+```php
+public function up(): void
 {
-    Schema::create('test_models', function (Blueprint $table) {
--       $table->id();
-+       $table->string('id')->primary();
-        //
+    Schema::create('books', function (Blueprint $table) {
+        $table->string('id')->primary();
         $table->timestamps();
     });
 }
 ```
 
-To create a new migration, use the artisan command `make:nanoid-migration`. All arguments work the same as the `make:migration` command.
+You can also scaffold migrations with:
 
-## Options
+```bash
+php artisan make:nanoid-migration
+```
 
-1. Prefix: To Specify a Prefix for the IDs, you can specify a prefix by add `nanoPrefix' property to your model class.
-2. Same applies for the length of the ID.
+`make:nanoid-migration` accepts the same arguments as `make:migration`.
+
+## Configuration
+
+You can configure generated IDs per model with these properties (or methods with the same names):
+
+- `nanoidPrefix`: static prefix, for example `ord_`
+- `nanoidLength`: fixed length (`10`) or random range (`[10, 20]`)
+- `nanoidAlphabet`: allowed characters
+- `nanoidFormat`: structured format like `{3}-{4}`
+
+Each option supports either:
+
+- A single value for all unique ID columns
+- A keyed array per column
+
+### Example
 
 ```php
 <?php
 
-class YourModel Extends \Illuminate\Database\Eloquent\Model
+use Illuminate\Database\Eloquent\Model;
+use Malico\LaravelNanoid\HasNanoids;
+
+class SessionToken extends Model
 {
-    /** @var array|int */
-    protected $nanoidLength = 10;
-    // id will be of length 10
-    // specifying to array. e.g [10, 20] will generate id of length 10 to 20
-    // or
-    public function nanoidLength(): array|int
-    {
-        // [10,20]
-        return 10;
-    }
+    use HasNanoids;
 
-    /** @var string */
-    protected $nanoidPrefix = 'pl_'; // id will look: pl_2k1MzOO2shfwow ...
-    // or
-    public function nanoidPrefix(): string
-    {
-        return 'pay_'; // pay_2MII83829sl2d
-    }
+    protected $nanoidAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
-    /** @var string */
-    protected $nanoidAlphabet = 'ABC';
-    // or
-    public function nanoidAlphabet(): string {
-        return 'ABC'; // pay_ACBACB
-    }
+    protected $nanoidPrefix = [
+        'id' => 'p-',
+    ];
 
-    public function uniqueIds()
+    protected $nanoidLength = [
+        'id' => 12,
+    ];
+
+    protected $nanoidFormat = [
+        'username' => 'u_{8}',
+    ];
+
+    public function uniqueIds(): array
     {
-        // will create nanonids for 'unique_id' &'another_with'
-        // Also, won't break if id is not listed.
-        return ['unique_id', 'another_id'];
+        return ['id', 'username'];
     }
 }
+
+// id: p-8F4Z2K9T7Q1M
+// username: u_A8K9P2QW
 ```
 
-Check the upgrade guide if you're [upgrading](UPGRADE.MD) from 0.x
+## Format Patterns
 
-### Author
+Use `nanoidFormat` when you want readable, segmented IDs.
+
+Supported placeholders:
+
+- `{n}` generates exactly `n` random characters
+- `{min-max}` generates a random length between `min` and `max`
+
+All other characters are kept as-is (`-`, `_`, `.`, spaces, and so on).
+
+```php
+class TrackingCode extends Model
+{
+    use HasNanoids;
+
+    protected $nanoidFormat = 'TRK-{3}-{3-4}-{6}';
+}
+
+// TRK-X9a-k2Pm-8Qw1Zr
+// TRK-L0p-r7A-2bV9tK
+```
+
+```php
+class Coupon extends Model
+{
+    use HasNanoids;
+
+    protected $nanoidAlphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    protected $nanoidFormat = '{4} {4}';
+}
+
+// 7KQ2 M9TZ
+```
+
+Rules:
+
+- If `nanoidFormat` is set, it fully controls the generated shape
+- `nanoidFormat` cannot be combined with `nanoidPrefix`
+- `nanoidFormat` cannot be combined with `nanoidLength`
+- Without `nanoidFormat`, generation falls back to `nanoidPrefix + nanoidLength`
+- With per-column arrays, these conflict rules apply per column
+
+## Benchmark
+
+Run the included micro-benchmark:
+
+```bash
+php benchmarks/nanoid.php
+```
+
+## Choosing an ID Type
+
+- Use this package when you want random, non-sequential, human-friendly IDs (for example `p-8F4Z2K9T7Q1M`)
+- Use Laravel `HasUlids` when you want sortable IDs that preserve creation order better
+- Use auto-incrementing integers when you need simple sequential IDs and the best insert locality
+
+If your system requires strictly incremental IDs, this package is not the right tool.
+
+## Safety Notes
+
+- Short IDs are easier to collide and easier to guess; increase length for public or sensitive resources
+- NanoID's own guidance compares default NanoID entropy with UUID v4 (similar collision profile)
+- Always choose size/alphabet based on your scale and threat model
+- For custom sizes, check collision estimates with: <https://zelark.github.io/nano-id-cc/>
+
+If you are upgrading from `0.x`, see [UPGRADE.MD](UPGRADE.MD).
+
+## Author
 
 Ndifon Desmond Yong
