@@ -1,0 +1,11 @@
+README.md export-ignore
+UPGRADE.md export-ignore
+benchmarks/ export-ignore
+tests/ export-ignore
+phpunit.xml.dist export-ignore
+testbench.yaml.dist export-ignore
+pint.json export-ignore
+rector.php export-ignore
+.phpunit.cache/ export-ignore
+.DS_Store export-ignore
+.gitignore export-ignore
