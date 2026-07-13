@@ -12,6 +12,8 @@ trait HasNanoids
 
     protected static array $nanoidFormatTokens = [];
 
+    protected static array $nanoidOptionResolvers = [];
+
     public function setUniqueIds()
     {
         foreach ($this->uniqueIds() as $column) {
@@ -157,12 +159,18 @@ trait HasNanoids
     protected function getNanoIdOption(string $name, ?string $column = null)
     {
         $value = null;
+        $key = static::class.'::'.$name;
 
-        if (property_exists($this, $name)) {
+        [$hasProperty, $hasMethod] = self::$nanoidOptionResolvers[$key] ??= [
+            property_exists($this, $name),
+            method_exists($this, $name),
+        ];
+
+        if ($hasProperty) {
             $value = $this->{$name};
         }
 
-        if (method_exists($this, $name)) {
+        if ($hasMethod) {
             $value = $this->{$name}();
         }
 
